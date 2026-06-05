@@ -458,39 +458,61 @@ function initCarousel() {
 }
 
 /* ==========================================
-   VIDEO LIGHTBOX MODAL
+   HERO VIDEO AUTOPLAY (3-second delay)
    ========================================== */
 function initLightbox() {
-  const modal = document.getElementById('video-lightbox-modal');
+  const videoPlayer = document.getElementById('hero-video-player');
+  const videoContainer = document.getElementById('video-thumbnail-container');
+  const playIcon = document.getElementById('hero-play-icon');
   const videoTriggerBtn = document.getElementById('cta-hero-secondary');
-  const videoThumbContainer = document.getElementById('video-thumbnail-container');
-  const closeBtn = document.getElementById('btn-close-modal');
-  const iframe = document.getElementById('modal-video-iframe');
 
-  if (!modal || !closeBtn || !iframe) return;
+  if (!videoPlayer || !videoContainer) return;
 
-  // Premium corporate video embed
-  // This is a premium branding/aesthetic portfolio video loop from YouTube
-  const videoUrl = 'https://www.youtube.com/embed/3Q3A7_F7wO0?autoplay=1&rel=0&modestbranding=1';
+  // Auto-play after 3 seconds
+  setTimeout(() => {
+    videoPlayer.play().then(() => {
+      videoContainer.classList.add('playing');
+    }).catch((err) => {
+      // Autoplay blocked by browser — keep play button visible
+      console.log('Autoplay prevented by browser:', err);
+    });
+  }, 3000);
 
-  function openModal() {
-    modal.classList.add('active');
-    iframe.src = videoUrl;
-    document.body.style.overflow = 'hidden'; // Lock scrolling
+  // Manual play/pause when clicking the container
+  videoContainer.addEventListener('click', (e) => {
+    // Don't interfere with native controls
+    if (e.target.closest('video')) return;
+
+    if (videoPlayer.paused) {
+      videoPlayer.play();
+      videoContainer.classList.add('playing');
+    } else {
+      videoPlayer.pause();
+      videoContainer.classList.remove('playing');
+    }
+  });
+
+  // "Ver Video" button scrolls to video and plays it
+  if (videoTriggerBtn) {
+    videoTriggerBtn.addEventListener('click', () => {
+      videoContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => {
+        videoPlayer.play().then(() => {
+          videoContainer.classList.add('playing');
+        }).catch(() => {});
+      }, 500);
+    });
   }
 
-  function closeModal() {
-    modal.classList.remove('active');
-    iframe.src = ''; // Stop video
-    document.body.style.overflow = ''; // Unlock scrolling
-  }
-
-  if (videoTriggerBtn) videoTriggerBtn.addEventListener('click', openModal);
-  if (videoThumbContainer) videoThumbContainer.addEventListener('click', openModal);
-
-  closeBtn.addEventListener('click', closeModal);
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeModal();
+  // Sync play/pause state with native controls
+  videoPlayer.addEventListener('play', () => {
+    videoContainer.classList.add('playing');
+  });
+  videoPlayer.addEventListener('pause', () => {
+    videoContainer.classList.remove('playing');
+  });
+  videoPlayer.addEventListener('ended', () => {
+    videoContainer.classList.remove('playing');
   });
 }
 

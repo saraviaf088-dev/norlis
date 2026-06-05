@@ -81,7 +81,19 @@
         <div class="hero-media" id="hero-media-wrapper">
           <div class="media-glow-ring"></div>
           <div class="video-container" id="video-thumbnail-container">
-            <img src="video_thumbnail.png" alt="Zoom Asesoría Video Thumbnail" class="video-thumbnail" id="hero-video-img">
+            <video 
+              id="hero-video-player"
+              class="hero-video"
+              muted 
+              playsinline 
+              controls
+              preload="auto"
+              poster="video_thumbnail.png"
+            >
+              <source src="multimedia/videos/presentacion1.mp4" type="video/mp4">
+              Tu navegador no soporta videos HTML5.
+            </video>
+            <!-- Play overlay shown before autoplay triggers -->
             <div class="video-play-btn" id="hero-play-icon">
               <i data-lucide="play"></i>
             </div>
@@ -555,17 +567,6 @@
     </a>
   </div>
 
-  <!-- Video Lightbox Modal -->
-  <div class="modal" id="video-lightbox-modal">
-    <div class="modal-content">
-      <button class="modal-close" id="btn-close-modal">
-        Cerrar <i data-lucide="x" style="width: 20px; height: 20px;"></i>
-      </button>
-      <!-- Premium video embed placeholder (e.g. YouTube / Vimeo) -->
-      <!-- We will load a premium stock/branding video loop from Youtube/Vimeo or simply show a polished fallback -->
-      <iframe id="modal-video-iframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-    </div>
-  </div>
 
   <!-- JS Scripts -->
   <!-- GSAP CDN -->
