@@ -2,6 +2,13 @@
    IMPACTA DIGITAL - Landing Page JavaScript
    ========================================== */
 
+// Configuration parameters for easy maintenance
+const CONFIG = {
+  whatsappNumber: '51987654321', // Replace with Norlis's actual WhatsApp phone number (with country code, no +)
+  emailContact: 'contacto@impactadigital.co',
+  countdownMinutes: 15 // Countdown duration in minutes
+};
+
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize Lucide Icons
   if (typeof lucide !== 'undefined') {
@@ -349,7 +356,7 @@ function initCountdown() {
   
   if (!hoursEl || !minutesEl || !secondsEl) return;
 
-  const COUNTDOWN_TIME = 15 * 60 * 1000; // 15 minutes in milliseconds
+  const COUNTDOWN_TIME = CONFIG.countdownMinutes * 60 * 1000; // Countdown in milliseconds
   let endTime = localStorage.getItem('impacta_cta_timer');
 
   if (!endTime) {
@@ -548,8 +555,8 @@ function initForm() {
       const messageText = encodeURIComponent(
         `Hola Norlis! Acabo de registrarme para la asesoría estratégica gratuita por Zoom de Impacta Digital. Mi nombre es ${leadData.name} y mi correo es ${leadData.email}. ¡Espero la confirmación de mi cupo!`
       );
-      // Constructing WhatsApp redirection link
-      whatsappButton.href = `https://api.whatsapp.com/send?phone=51987654321&text=${messageText}`;
+      // Constructing WhatsApp redirection link using the CONFIG number
+      whatsappButton.href = `https://api.whatsapp.com/send?phone=${CONFIG.whatsappNumber}&text=${messageText}`;
     }
 
     // Success Screen Transition Animation
@@ -564,6 +571,8 @@ function initForm() {
           { opacity: 0, y: 20 },
           { duration: 0.6, opacity: 1, y: 0, ease: 'power3.out' }
         );
+        // Smooth scroll success screen into center view
+        document.getElementById('register').scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     });
   });
