@@ -362,7 +362,7 @@
             position: fixed;
             bottom: 1.5rem;
             right: 1.5rem;
-            width: 340px;
+            width: 460px;
             max-width: calc(100vw - 3rem);
             border-radius: 16px;
             padding: 8px;
@@ -469,13 +469,18 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-end;
+            padding: 1.25rem 1rem;
             gap: 1rem;
             background: linear-gradient(135deg, #3C0606 0%, #510102 50%, #0E0000 100%);
             color: rgba(255, 255, 255, 0.8);
         }
 
         .play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: 70px;
             height: 70px;
             border-radius: 50%;
@@ -491,7 +496,7 @@
 
         .play-btn:hover {
             background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.05);
+            transform: translate(-50%, -50%) scale(1.05);
         }
 
         .play-btn svg {
@@ -633,7 +638,7 @@
             }
 
             .video-frame {
-                width: 420px;
+                width: 600px;
                 bottom: 2rem;
                 right: 2rem;
             }
