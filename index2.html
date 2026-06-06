@@ -386,12 +386,6 @@
             cursor: grabbing;
         }
 
-        .video-frame.minimized {
-            transform: scale(0.25);
-            transform-origin: bottom right;
-            opacity: 0.85;
-        }
-
         @keyframes floatIn {
             from { transform: translateY(40px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
@@ -405,42 +399,6 @@
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), transparent 30%, transparent 70%, rgba(255, 255, 255, 0.15));
             z-index: 2;
             pointer-events: none;
-        }
-
-        .video-controls-bar {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            display: flex;
-            gap: 6px;
-            z-index: 4;
-        }
-
-        .video-btn {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.55);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            transition: background 0.2s ease, transform 0.2s ease;
-        }
-
-        .video-btn:hover {
-            background: rgba(0, 0, 0, 0.8);
-            transform: scale(1.1);
-        }
-
-        .video-btn svg {
-            width: 14px;
-            height: 14px;
-            fill: #fff;
         }
 
         .video-inner {
@@ -767,14 +725,6 @@
 
             <div class="hero-media">
                 <div class="video-frame" id="videoFrame">
-                    <div class="video-controls-bar">
-                        <button class="video-btn" id="videoMinimize" type="button" aria-label="Minimizar video">
-                            <svg viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>
-                        </button>
-                        <button class="video-btn" id="videoClose" type="button" aria-label="Cerrar video">
-                            <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-                        </button>
-                    </div>
                     <div class="video-inner">
                         <video controls autoplay muted loop playsinline preload="metadata" poster="">
                             <source src="multimedia/videos/presentacion1.mp4" type="video/mp4" />
@@ -878,31 +828,16 @@
             }
         })();
 
-        // Video flotante: cerrar, minimizar y arrastrar
+        // Video flotante: arrastrar
         (function () {
             const frame = document.getElementById('videoFrame');
-            const closeBtn = document.getElementById('videoClose');
-            const minimizeBtn = document.getElementById('videoMinimize');
-            if (!frame || !closeBtn || !minimizeBtn) return;
-
-            closeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                frame.style.display = 'none';
-            });
-
-            let minimized = false;
-            minimizeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                minimized = !minimized;
-                frame.classList.toggle('minimized', minimized);
-            });
+            if (!frame) return;
 
             // Arrastrar el video modal
             let isDragging = false;
             let startX, startY, startLeft, startBottom;
             const onMouseDown = (e) => {
-                if (e.target.closest('.video-controls-bar') || e.target.closest('video') || e.target.closest('.video-btn')) return;
-                if (minimized) return;
+                if (e.target.closest('video')) return;
                 isDragging = true;
                 frame.classList.add('dragging');
                 const rect = frame.getBoundingClientRect();
@@ -935,8 +870,7 @@
 
             // Soporte táctil
             frame.addEventListener('touchstart', (e) => {
-                if (e.target.closest('.video-controls-bar') || e.target.closest('video') || e.target.closest('.video-btn')) return;
-                if (minimized) return;
+                if (e.target.closest('video')) return;
                 const t = e.touches[0];
                 isDragging = true;
                 frame.classList.add('dragging');
