@@ -487,9 +487,10 @@
             right: 0;
             bottom: 0;
             z-index: 3;
-            padding: 1.5rem 1rem 2rem;
+            padding: 1.5rem 1rem 3.25rem;
             background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.75) 100%);
             color: #fff;
+            pointer-events: none;
         }
 
         .video-frame .rating p {
@@ -726,7 +727,7 @@
             <div class="hero-media">
                 <div class="video-frame" id="videoFrame">
                     <div class="video-inner">
-                        <video controls autoplay muted loop playsinline preload="metadata" poster="">
+                        <video controls loop playsinline preload="metadata" poster="">
                             <source src="multimedia/videos/presentacion1.mp4" type="video/mp4" />
                         </video>
                         <div class="video-placeholder" id="videoPlaceholder">
@@ -819,13 +820,21 @@
             const video = document.querySelector('.video-inner video');
             const placeholder = document.getElementById('videoPlaceholder');
             if (!video || !placeholder) return;
+
+            placeholder.style.cursor = 'pointer';
+
+            const hidePlaceholder = () => placeholder.style.display = 'none';
             const showPlaceholder = () => placeholder.style.display = 'flex';
-            video.addEventListener('loadeddata', () => placeholder.style.display = 'none');
+
+            placeholder.addEventListener('click', () => {
+                video.play().then(hidePlaceholder).catch(() => {});
+            });
+
+            video.addEventListener('play', hidePlaceholder);
             video.addEventListener('error', showPlaceholder);
-            // Si no hay src, mantener placeholder
-            if (!video.querySelector('source')?.getAttribute('src')) {
-                showPlaceholder();
-            }
+            video.addEventListener('pause', () => {
+                if (video.currentTime === 0 || video.ended) showPlaceholder();
+            });
         })();
 
         // Video flotante: arrastrar
