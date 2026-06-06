@@ -737,10 +737,17 @@
             </div>
 
             <div class="hero-media">
-                <div class="video-frame">
+                <div class="video-frame" id="videoFrame">
+                    <div class="video-controls-bar">
+                        <button class="video-btn" id="videoMinimize" type="button" aria-label="Minimizar video">
+                            <svg viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>
+                        </button>
+                        <button class="video-btn" id="videoClose" type="button" aria-label="Cerrar video">
+                            <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                        </button>
+                    </div>
                     <div class="video-inner">
-                        <!-- Reemplaza src con la URL de tu video autoplay muted loop -->
-                        <video autoplay muted loop playsinline preload="metadata" poster="">
+                        <video controls autoplay muted loop playsinline preload="metadata" poster="">
                             <source src="multimedia/videos/presentacion1.mp4" type="video/mp4" />
                         </video>
                         <div class="video-placeholder" id="videoPlaceholder">
@@ -841,6 +848,94 @@
             if (!video.querySelector('source')?.getAttribute('src')) {
                 showPlaceholder();
             }
+        })();
+
+        // Video flotante: cerrar, minimizar y arrastrar
+        (function () {
+            const frame = document.getElementById('videoFrame');
+            const closeBtn = document.getElementById('videoClose');
+            const minimizeBtn = document.getElementById('videoMinimize');
+            if (!frame || !closeBtn || !minimizeBtn) return;
+
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                frame.style.display = 'none';
+            });
+
+            let minimized = false;
+            minimizeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                minimized = !minimized;
+                frame.classList.toggle('minimized', minimized);
+            });
+
+            // Arrastrar el video modal
+            let isDragging = false;
+            let startX, startY, startLeft, startBottom;
+            const onMouseDown = (e) => {
+                if (e.target.closest('.video-controls-bar') || e.target.closest('video') || e.target.closest('.video-btn')) return;
+                if (minimized) return;
+                isDragging = true;
+                frame.classList.add('dragging');
+                const rect = frame.getBoundingClientRect();
+                startLeft = rect.left;
+                startBottom = window.innerHeight - rect.bottom;
+                startX = e.clientX;
+                startY = e.clientY;
+                frame.style.left = startLeft + 'px';
+                frame.style.right = 'auto';
+                frame.style.bottom = startBottom + 'px';
+                e.preventDefault();
+            };
+            const onMouseMove = (e) => {
+                if (!isDragging) return;
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                const newLeft = Math.max(0, Math.min(window.innerWidth - frame.offsetWidth, startLeft + dx));
+                const newBottom = Math.max(0, Math.min(window.innerHeight - frame.offsetHeight, startBottom - dy));
+                frame.style.left = newLeft + 'px';
+                frame.style.bottom = newBottom + 'px';
+            };
+            const onMouseUp = () => {
+                if (!isDragging) return;
+                isDragging = false;
+                frame.classList.remove('dragging');
+            };
+            frame.addEventListener('mousedown', onMouseDown);
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+
+            // Soporte táctil
+            frame.addEventListener('touchstart', (e) => {
+                if (e.target.closest('.video-controls-bar') || e.target.closest('video') || e.target.closest('.video-btn')) return;
+                if (minimized) return;
+                const t = e.touches[0];
+                isDragging = true;
+                frame.classList.add('dragging');
+                const rect = frame.getBoundingClientRect();
+                startLeft = rect.left;
+                startBottom = window.innerHeight - rect.bottom;
+                startX = t.clientX;
+                startY = t.clientY;
+                frame.style.left = startLeft + 'px';
+                frame.style.right = 'auto';
+                frame.style.bottom = startBottom + 'px';
+            }, { passive: true });
+            document.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                const t = e.touches[0];
+                const dx = t.clientX - startX;
+                const dy = t.clientY - startY;
+                const newLeft = Math.max(0, Math.min(window.innerWidth - frame.offsetWidth, startLeft + dx));
+                const newBottom = Math.max(0, Math.min(window.innerHeight - frame.offsetHeight, startBottom - dy));
+                frame.style.left = newLeft + 'px';
+                frame.style.bottom = newBottom + 'px';
+            }, { passive: true });
+            document.addEventListener('touchend', () => {
+                if (!isDragging) return;
+                isDragging = false;
+                frame.classList.remove('dragging');
+            });
         })();
     </script>
 </body>
