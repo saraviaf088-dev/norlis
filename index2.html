@@ -359,11 +359,10 @@
         }
 
         .video-frame {
-            position: fixed;
-            bottom: 1.5rem;
-            right: 1.5rem;
-            width: 460px;
-            max-width: calc(100vw - 3rem);
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
             border-radius: 16px;
             padding: 8px;
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
@@ -375,20 +374,7 @@
                 0 0 0 1px rgba(255, 255, 255, 0.05) inset;
             overflow: hidden;
             aspect-ratio: 16 / 9;
-            z-index: 999;
-            cursor: move;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            animation: floatIn 0.6s ease-out 0.5s both;
-        }
-
-        .video-frame.dragging {
-            transition: none;
-            cursor: grabbing;
-        }
-
-        @keyframes floatIn {
-            from { transform: translateY(40px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            cursor: default;
         }
 
         .video-frame::before {
@@ -620,9 +606,7 @@
             }
 
             .video-frame {
-                width: 600px;
-                bottom: 2rem;
-                right: 2rem;
+                max-width: 720px;
             }
 
             .calendly-section {
@@ -837,76 +821,11 @@
             });
         })();
 
-        // Video flotante: arrastrar
+        // Video arrastrable deshabilitado (ya no es flotante)
         (function () {
             const frame = document.getElementById('videoFrame');
             if (!frame) return;
-
-            // Arrastrar el video modal
-            let isDragging = false;
-            let startX, startY, startLeft, startBottom;
-            const onMouseDown = (e) => {
-                if (e.target.closest('video')) return;
-                isDragging = true;
-                frame.classList.add('dragging');
-                const rect = frame.getBoundingClientRect();
-                startLeft = rect.left;
-                startBottom = window.innerHeight - rect.bottom;
-                startX = e.clientX;
-                startY = e.clientY;
-                frame.style.left = startLeft + 'px';
-                frame.style.right = 'auto';
-                frame.style.bottom = startBottom + 'px';
-                e.preventDefault();
-            };
-            const onMouseMove = (e) => {
-                if (!isDragging) return;
-                const dx = e.clientX - startX;
-                const dy = e.clientY - startY;
-                const newLeft = Math.max(0, Math.min(window.innerWidth - frame.offsetWidth, startLeft + dx));
-                const newBottom = Math.max(0, Math.min(window.innerHeight - frame.offsetHeight, startBottom - dy));
-                frame.style.left = newLeft + 'px';
-                frame.style.bottom = newBottom + 'px';
-            };
-            const onMouseUp = () => {
-                if (!isDragging) return;
-                isDragging = false;
-                frame.classList.remove('dragging');
-            };
-            frame.addEventListener('mousedown', onMouseDown);
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
-
-            // Soporte táctil
-            frame.addEventListener('touchstart', (e) => {
-                if (e.target.closest('video')) return;
-                const t = e.touches[0];
-                isDragging = true;
-                frame.classList.add('dragging');
-                const rect = frame.getBoundingClientRect();
-                startLeft = rect.left;
-                startBottom = window.innerHeight - rect.bottom;
-                startX = t.clientX;
-                startY = t.clientY;
-                frame.style.left = startLeft + 'px';
-                frame.style.right = 'auto';
-                frame.style.bottom = startBottom + 'px';
-            }, { passive: true });
-            document.addEventListener('touchmove', (e) => {
-                if (!isDragging) return;
-                const t = e.touches[0];
-                const dx = t.clientX - startX;
-                const dy = t.clientY - startY;
-                const newLeft = Math.max(0, Math.min(window.innerWidth - frame.offsetWidth, startLeft + dx));
-                const newBottom = Math.max(0, Math.min(window.innerHeight - frame.offsetHeight, startBottom - dy));
-                frame.style.left = newLeft + 'px';
-                frame.style.bottom = newBottom + 'px';
-            }, { passive: true });
-            document.addEventListener('touchend', () => {
-                if (!isDragging) return;
-                isDragging = false;
-                frame.classList.remove('dragging');
-            });
+            // Intencionalmente vacío: el video ahora forma parte del flujo del documento.
         })();
     </script>
 </body>
