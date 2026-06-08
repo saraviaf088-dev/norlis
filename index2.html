@@ -326,6 +326,27 @@
             transform: translateX(4px);
         }
 
+        .cta-green {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            border: 1px solid rgba(37, 211, 102, 0.4);
+            box-shadow:
+                0 10px 40px rgba(37, 211, 102, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+                0 0 80px rgba(37, 211, 102, 0.25);
+            animation: pulseGlowGreen 3.5s ease-in-out infinite;
+        }
+
+        .cta-green:hover {
+            box-shadow:
+                0 16px 50px rgba(37, 211, 102, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+                0 0 100px rgba(37, 211, 102, 0.4);
+        }
+
+        .cta-green::before {
+            background: radial-gradient(circle at var(--glow-x) var(--glow-y), rgba(255, 255, 255, 0.3), transparent 50%);
+        }
+
         @keyframes pulseGlow {
             0%, 100% {
                 box-shadow:
@@ -338,6 +359,21 @@
                     0 10px 40px rgba(116, 1, 8, 0.6),
                     0 0 0 1px rgba(255, 255, 255, 0.08) inset,
                     0 0 100px rgba(116, 1, 8, 0.5);
+            }
+        }
+
+        @keyframes pulseGlowGreen {
+            0%, 100% {
+                box-shadow:
+                    0 10px 40px rgba(37, 211, 102, 0.4),
+                    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+                    0 0 60px rgba(37, 211, 102, 0.25);
+            }
+            50% {
+                box-shadow:
+                    0 10px 40px rgba(37, 211, 102, 0.5),
+                    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+                    0 0 100px rgba(37, 211, 102, 0.4);
             }
         }
 
@@ -703,8 +739,8 @@
                 </ul>
 
                 <div class="cta-wrap">
-                    <a href="#reservar" class="cta" id="mainCta">
-                        <span>Agendar mi asesoría gratuita</span>
+                    <a href="#reservar" class="cta cta-green" id="mainCta">
+                        <span>Quiero reservar mi asesoría gratuita</span>
                         <svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <line x1="5" y1="12" x2="19" y2="12"></line>
                             <polyline points="12 5 19 12 12 19"></polyline>
